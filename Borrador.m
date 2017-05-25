@@ -62,6 +62,7 @@ xlabel('Frecuencia (Hz)');
 legend('Parte real', 'Parte imaginaria');
 grid on;
 
+%Grafiacion del espectro de Fourier de x
 figure;
 stem(f, abs(X));    %espectro de Fourier
 title('Especto de Fourier de X(F)');
@@ -69,8 +70,6 @@ xlabel('Frecuencia (Hz)');
 %ylabel('X(F)');
 legend('Magnitud X(F)');
 grid on;
-
-%Grafiacion del espectro de Fourier de x
 
 
 %% 3. DENSIDAD ESPECTRAL DE POTENCIA
@@ -104,9 +103,26 @@ grid on;
 
 %FALTA DETERMINAR Px de Sxx1
 
-%%
+%% 4. FILTRADO
+%filtro FIR pasa-bajos de orden 32 con frecuencia de media potencia de fc = f 2 
+D = designfilt('lowpassfir','FilterOrder',32,'HalfPowerFrequency',f2,'SampleRate',Fs);
 
+%respuesta en frecuencia del filtro
+freqz(D, f, Fs);
 
+%Filtrando x con el filtro disennado
+y = filter(D,x);
 
+%Transformada de fourier Y(F) de y(t)
+Y = 1/N*fftshift(fft(y,N)); 
 
+%Grafiacion del espectro de Fourier de Y
+figure;
+stem(f, abs(Y));    %espectro de Fourier
+title('Especto de Fourier de Y(F)');
+xlabel('Frecuencia (Hz)');
+%ylabel('X(F)');
+legend('Magnitud Y(F)');
+grid on;
 
+%% RETO: FILTRADO DE UNA SENNAL DE AUDIO
